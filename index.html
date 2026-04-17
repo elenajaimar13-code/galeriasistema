@@ -27,7 +27,7 @@ h2 {
   color: white;
 }
 
-/* IMAGEN PRINCIPAL (SIN RECORTE) */
+/* IMAGEN PRINCIPAL */
 .principal {
   max-width: 100%;
   max-height: 500px;
@@ -36,6 +36,19 @@ h2 {
   object-fit: contain;
   background: black;
   border-radius: 10px;
+
+  transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+/* ANIMACIONES */
+.fade-out {
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+.fade-in {
+  opacity: 1;
+  transform: scale(1);
 }
 
 /* BOTONES */
@@ -46,10 +59,12 @@ button {
   background: #e0e0e0;
   cursor: pointer;
   border-radius: 5px;
+  transition: 0.3s;
 }
 
 button:hover {
   transform: scale(1.1);
+  background: #ffffff;
 }
 
 /* CONTADOR */
@@ -72,17 +87,19 @@ button:hover {
   background: black;
   cursor: pointer;
   opacity: 0.6;
+  transition: 0.3s;
 }
 
 .miniaturas img:hover {
   opacity: 1;
-  transform: scale(1.1);
+  transform: scale(1.2);
 }
 
-/* MINIATURA ACTIVA */
+/* ACTIVA */
 .activa {
   border: 2px solid white;
   opacity: 1;
+  transform: scale(1.1);
 }
 </style>
 
@@ -93,26 +110,21 @@ button:hover {
 
   <h2>Galería Fotográfica</h2>
 
-  <!-- IMAGEN PRINCIPAL -->
-  <img id="imagen" class="principal" src="img1.jpeg">
+  <img id="imagen" class="principal fade-in" src="img1.jpeg">
 
-  <!-- BOTONES -->
   <div>
     <button onclick="anterior()">⬅ Anterior</button>
     <button onclick="siguiente()">Siguiente ➡</button>
   </div>
 
-  <!-- CONTADOR -->
   <div class="contador" id="contador"></div>
 
-  <!-- MINIATURAS -->
   <div class="miniaturas" id="miniaturas"></div>
 
 </div>
 
 <script>
 
-// 👇 LISTA CORRECTA SIN ESPACIOS
 let imagenes = [
   "img1.jpeg","img2.jpeg","img3.jpeg","img4.jpeg","img5.jpeg",
   "img6.jpeg","img7.jpeg","img8.jpeg","img9.jpeg","img10.jpeg",
@@ -130,27 +142,33 @@ let miniCont = document.getElementById("miniaturas");
 imagenes.forEach((src, i) => {
   let mini = document.createElement("img");
   mini.src = src;
-  mini.onclick = () => mostrar(i);
+  mini.onclick = () => cambiarImagen(i);
   miniCont.appendChild(mini);
 });
 
-// MOSTRAR IMAGEN
-function mostrar(i) {
-  indice = i;
-  img.src = imagenes[indice];
-  actualizar();
+// CAMBIO CON ANIMACIÓN
+function cambiarImagen(nuevo) {
+  img.classList.remove("fade-in");
+  img.classList.add("fade-out");
+
+  setTimeout(() => {
+    indice = nuevo;
+    img.src = imagenes[indice];
+    actualizar();
+
+    img.classList.remove("fade-out");
+    img.classList.add("fade-in");
+  }, 300);
 }
 
 // SIGUIENTE
 function siguiente() {
-  indice = (indice + 1) % imagenes.length;
-  mostrar(indice);
+  cambiarImagen((indice + 1) % imagenes.length);
 }
 
 // ANTERIOR
 function anterior() {
-  indice = (indice - 1 + imagenes.length) % imagenes.length;
-  mostrar(indice);
+  cambiarImagen((indice - 1 + imagenes.length) % imagenes.length);
 }
 
 // ACTUALIZAR
