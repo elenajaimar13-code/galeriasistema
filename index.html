@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Galería Fotográfica</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #2c2c2c;
+  display: flex;
+  justify-content: center;
+}
+
+.contenedor {
+  background: #3a3a3a;
+  margin: 30px;
+  padding: 20px;
+  border-radius: 15px;
+  width: 90%;
+  max-width: 900px;
+  text-align: center;
+}
+
+h2 {
+  color: white;
+}
+
+/* IMAGEN PRINCIPAL (SIN RECORTE) */
+.principal {
+  max-width: 100%;
+  max-height: 500px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  background: black;
+  border-radius: 10px;
+}
+
+/* BOTONES */
+button {
+  padding: 10px 20px;
+  margin: 10px;
+  border: none;
+  background: #e0e0e0;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+button:hover {
+  transform: scale(1.1);
+}
+
+/* CONTADOR */
+.contador {
+  color: white;
+}
+
+/* MINIATURAS */
+.miniaturas {
+  display: flex;
+  overflow-x: auto;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.miniaturas img {
+  width: 80px;
+  height: 60px;
+  object-fit: contain;
+  background: black;
+  cursor: pointer;
+  opacity: 0.6;
+}
+
+.miniaturas img:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* MINIATURA ACTIVA */
+.activa {
+  border: 2px solid white;
+  opacity: 1;
+}
+</style>
+
+</head>
+<body>
+
+<div class="contenedor">
+
+  <h2>Galería Fotográfica</h2>
+
+  <!-- IMAGEN PRINCIPAL -->
+  <img id="imagen" class="principal" src="img1.jpeg">
+
+  <!-- BOTONES -->
+  <div>
+    <button onclick="anterior()">⬅ Anterior</button>
+    <button onclick="siguiente()">Siguiente ➡</button>
+  </div>
+
+  <!-- CONTADOR -->
+  <div class="contador" id="contador"></div>
+
+  <!-- MINIATURAS -->
+  <div class="miniaturas" id="miniaturas"></div>
+
+</div>
+
+<script>
+
+// 👇 LISTA CORRECTA SIN ESPACIOS
+let imagenes = [
+  "img1.jpeg","img2.jpeg","img3.jpeg","img4.jpeg","img5.jpeg",
+  "img6.jpeg","img7.jpeg","img8.jpeg","img9.jpeg","img10.jpeg",
+  "img11.jpeg","img12.jpeg","img13.jpeg","img14.jpeg","img15.jpeg",
+  "img16.jpeg","img17.jpeg","img18.jpeg","img19.jpeg","img20.jpeg",
+  "img21.jpeg","img22.jpeg","img23.jpeg","img24.jpeg","img25.jpeg",
+  "img26.jpeg","img27.jpeg","img28.jpeg","img29.jpeg"
+];
+
+let indice = 0;
+let img = document.getElementById("imagen");
+let miniCont = document.getElementById("miniaturas");
+
+// CREAR MINIATURAS
+imagenes.forEach((src, i) => {
+  let mini = document.createElement("img");
+  mini.src = src;
+  mini.onclick = () => mostrar(i);
+  miniCont.appendChild(mini);
+});
+
+// MOSTRAR IMAGEN
+function mostrar(i) {
+  indice = i;
+  img.src = imagenes[indice];
+  actualizar();
+}
+
+// SIGUIENTE
+function siguiente() {
+  indice = (indice + 1) % imagenes.length;
+  mostrar(indice);
+}
+
+// ANTERIOR
+function anterior() {
+  indice = (indice - 1 + imagenes.length) % imagenes.length;
+  mostrar(indice);
+}
+
+// ACTUALIZAR
+function actualizar() {
+  document.getElementById("contador").innerText =
+    "Imagen " + (indice + 1) + " de " + imagenes.length;
+
+  document.querySelectorAll(".miniaturas img").forEach((el, i) => {
+    el.classList.toggle("activa", i === indice);
+  });
+}
+
+// INICIO
+actualizar();
+
+</script>
+
+</body>
+</html>
